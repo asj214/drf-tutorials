@@ -11,7 +11,7 @@ from .serializers import PostSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
