@@ -1,0 +1,89 @@
+@BASE_URL = http://127.0.0.1:8000/api
+
+
+###
+# @name authentication
+POST {{ BASE_URL }}/token
+Content-Type: application/json
+
+{
+    "username": "sjahn",
+    "password": "rewq1234"
+}
+
+###
+@token = {{ authentication.response.body.token }}
+
+
+###
+POST {{ BASE_URL }}/token/verify
+Content-Type: application/json
+
+{
+    "token": "{{ token }}"
+}
+
+
+###
+GET {{ BASE_URL }}/posts
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+POST {{ BASE_URL }}/posts
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "title": "hello world",
+    "body": "hello wwwwwww"
+}
+
+
+###
+GET {{ BASE_URL }}/posts/1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+PUT {{ BASE_URL }}/posts/1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "body": "My Father Goes To The Market With Donkey.."
+}
+
+
+###
+DELETE {{ BASE_URL }}/posts/2
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+POST {{ BASE_URL }}/posts/3/comments
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "body": "first comments"
+}
+
+
+###
+PUT {{ BASE_URL }}/posts/1/comments/3
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "body": "modify comment4"
+}
+
+
+###
+DELETE {{ BASE_URL }}/posts/1/comments/2
+Content-Type: application/json
+Authorization: Bearer {{ token }}
