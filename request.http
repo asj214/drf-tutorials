@@ -70,3 +70,66 @@ Content-Type: application/json
 Authorization: Bearer {{ token }}
 
 
+
+###
+GET {{ BASE_URL }}/api/artists?name=버즈
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+
+
+###
+POST {{ BASE_URL }}/api/artists
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "name": "IU"
+}
+
+
+###
+PUT {{ BASE_URL }}/api/artists/4
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "name": "버즈",
+    "names": [
+        {
+            "code": "ko",
+            "value": "버즈"
+        },
+        {
+            "code": "en",
+            "value": "Buzz"
+        }
+    ]
+}
+
+
+###
+DELETE {{ BASE_URL }}/api/artists/6
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+GET {{ BASE_URL }}/api/products
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+POST {{ BASE_URL }}/api/products
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "name": "8282",
+    "artist": 3,
+    "price": 15000
+}
+
+
