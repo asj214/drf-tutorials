@@ -120,8 +120,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('conf.backends.JWTAuthentication',),
     # 'EXCEPTION_HANDLER': 'system.exception_handlers.core_exception_handler',
     'NON_FIELD_ERRORS_KEY': 'error',
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'DEFAULT_PAGINATION_CLASS': 'conf.paginations.CustomPagination',
+    'PAGE_SIZE': 20,
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -137,4 +137,22 @@ JWT_AUTH = {
     # 토큰 만료 시간 설정
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_EXPIRATION_DELTA': timedelta(days=5)
+}
+
+LOGGING = {
+    'version': 1,
+    # 기존의 로깅 설정을 비활성화 할 것인가?
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
+    }
 }

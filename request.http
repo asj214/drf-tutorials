@@ -47,3 +47,26 @@ Authorization: Bearer {{ token }}
     "title": "Hello World",
     "body": "My Father Goes To The Market With Donkey ..."
 }
+
+
+###
+GET {{ BASE_URL }}/api/posts/1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+###
+PUT {{ BASE_URL }}/api/posts/1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "title": "Fuck You"
+}
+
+
+###
+DELETE {{ BASE_URL }}/api/posts/1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
