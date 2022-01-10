@@ -21,11 +21,29 @@ Content-Type: application/json
     "password": "rewq1234"
 }
 
+
 ###
-@customer = {{ authentication.response.body.token }}
+@token = {{ authentication.response.body.token }}
 
 
 ###
 GET {{ BASE_URL }}/api/auth/me
 Content-Type: application/json
-Authorization: Bearer {{ customer }}
+Authorization: Bearer {{ token }}
+
+
+###
+GET {{ BASE_URL }}/api/posts
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+POST {{ BASE_URL }}/api/posts
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "title": "Hello World",
+    "body": "My Father Goes To The Market With Donkey ..."
+}
