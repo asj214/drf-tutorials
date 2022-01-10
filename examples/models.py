@@ -13,12 +13,7 @@ class ArtistManager(models.Manager):
 
     def search_name(self, keyword: str):
         return self.get_queryset().filter(
-            id__in=list(set(
-                [r.content_id 
-                    for r in LocaleName.objects.filter(
-                        value__contains=keyword).all()
-                ]
-            ))
+            id__in=LocaleName.objects.search_name(keyword)
         )
 
 
@@ -94,6 +89,17 @@ class Product(BaseModel, SoftDeleteModel):
         return f'{self.id}'
 
 
+class LocaleNameManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset()
+
+    def search_name(self, keyword: str):
+        return list(set(
+            [r.content_id for r in self.get_queryset().filter(
+                value__contains=keyword).all()]
+        ))
+
+
 class LocaleName(models.Model):
     content_type = models.ForeignKey(
         ContentType,
@@ -112,6 +118,8 @@ class LocaleName(models.Model):
     content_object = GenericForeignKey('content_type', 'content_id')
     code = models.CharField(max_length=200)
     value = models.CharField(max_length=200)
+
+    objects = LocaleNameManager()
 
     class Meta:
         db_table = 'locale_names'
