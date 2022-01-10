@@ -1,0 +1,56 @@
+- model: examples.localename
+  pk: 1
+  fields:
+    content_type: 9
+    content_id: 1
+    code: ko
+    value: 아이유(IU)
+- model: examples.localename
+  pk: 2
+  fields:
+    content_type: 9
+    content_id: 1
+    code: en
+    value: IU
+- model: examples.localename
+  pk: 3
+  fields:
+    content_type: 9
+    content_id: 2
+    code: ko
+    value: 소녀시대
+- model: examples.localename
+  pk: 4
+  fields:
+    content_type: 9
+    content_id: 2
+    code: en
+    value: Girls Generation(SNSD)
+- model: examples.localename
+  pk: 5
+  fields:
+    content_type: 9
+    content_id: 3
+    code: ko
+    value: 다비치
+- model: examples.localename
+  pk: 6
+  fields:
+    content_type: 9
+    content_id: 3
+    code: en
+    value: Davich
+- model: examples.localename
+  pk: 7
+  fields:
+    content_type: 9
+    content_id: 4
+    code: ko
+    value: 버즈
+- model: examples.localename
+  pk: 8
+  fields:
+    content_type: 9
+    content_id: 4
+    code: en
+    value: Buzz
