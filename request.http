@@ -128,8 +128,38 @@ Authorization: Bearer {{ token }}
 
 {
     "name": "8282",
+    "names": [
+        {
+            "code": "ko",
+            "value": "버즈"
+        },
+        {
+            "code": "en",
+            "value": "Buzz"
+        }
+    ],
     "artist": 3,
     "price": 15000
 }
 
 
+###
+PUT {{ BASE_URL }}/api/products/1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "name": "8282",
+    "names": [
+        {
+            "code": "ko",
+            "value": "Lion Heart"
+        },
+        {
+            "code": "en",
+            "value": "Lion Heart"
+        }
+    ],
+    "artist": 3,
+    "price": 15000
+}

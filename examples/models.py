@@ -47,7 +47,13 @@ class Artist(BaseModel, SoftDeleteModel):
 
     def set_locale_names(self, names: list):
         for row in names:
-            self.names.get_or_create(**row)
+            if not self.names.filter(code=row.get('code')).exists():
+                self.names.create(**row)
+            else:
+                locale = self.names.filter(code=row.get('code')).first()
+                locale.value = row.get('value')
+                locale.save()
+
         return self
 
 
@@ -55,6 +61,7 @@ class ProductManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().prefetch_related(
             'user',
+            'names',
             'artist',
         ).filter(deleted_at__isnull=True)
 
@@ -69,6 +76,14 @@ class Product(BaseModel, SoftDeleteModel):
         related_name='products'
     )
     name = models.CharField('상품명', max_length=200)
+    names = GenericRelation(
+        'examples.LocaleName',
+        default=None,
+        null=True,
+        object_id_field='content_id',
+        content_type_field='content_type'
+    )
+
     artist = models.ForeignKey(
         Artist,
         on_delete=models.DO_NOTHING,
@@ -87,6 +102,17 @@ class Product(BaseModel, SoftDeleteModel):
 
     def __str__(self):
         return f'{self.id}'
+
+    def set_locale_names(self, names: list):
+        for row in names:
+            if not self.names.filter(code=row.get('code')).exists():
+                self.names.create(**row)
+            else:
+                locale = self.names.filter(code=row.get('code')).first()
+                locale.value = row.get('value')
+                locale.save()
+
+        return self
 
 
 class LocaleNameManager(models.Manager):

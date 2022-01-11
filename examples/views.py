@@ -34,9 +34,13 @@ class ArtistViewSet(viewsets.ModelViewSet):
         return self.get_paginated_response(serializer.data)
     
     def create(self, request, pk=None, *args, **kwargs):
+        context = {
+            'user': request.user,
+            'names': request.data.pop('names', [])
+        }
         serializer = self.serializer_class(
             data=request.data,
-            context={'user': request.user},
+            context=context,
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -97,9 +101,13 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
     def create(self, request, pk=None, *args, **kwargs):
+        context = {
+            'user': request.user,
+            'names': request.data.pop('names', [])
+        }
         serializer = self.serializer_class(
             data=request.data,
-            context={'user': request.user},
+            context=context,
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -115,11 +123,15 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
     def update(self, request, pk=None, *args, **kwargs):
+        context = {
+            'user': request.user,
+            'names': request.data.pop('names', [])
+        }
         product = self.get_object(pk)
         serializer = self.serializer_class(
             product,
             data=request.data,
-            context={'user': request.user},
+            context=context,
             partial=True
         )
         serializer.is_valid(raise_exception=True)

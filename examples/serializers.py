@@ -36,10 +36,14 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = self.context.pop('user')
-        return Artist.objects.create(
+        artist = Artist.objects.create(
             user=user,
             **validated_data
         )
+
+        artist.set_locale_names(self.context.pop('names', []))
+
+        return artist
 
     def update(self, instance, validated_data):
         with transaction.atomic():
@@ -57,6 +61,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     name = serializers.CharField(max_length=200)
+    names = LocaleRelatedSerializer(many=True, read_only=True)
     price = serializers.IntegerField(default=0)
     artist = ArtistRelated(read_only=True)
 
@@ -73,10 +78,14 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = self.context.pop('user')
-        return Product.objects.create(
+        product = Product.objects.create(
             user=user,
             **validated_data
         )
+
+        product.set_locale_names(self.context.pop('names', []))
+
+        return product
 
     def update(self, instance, validated_data):
         user = self.context.pop('user')
@@ -84,9 +93,7 @@ class ProductSerializer(serializers.ModelSerializer):
             setattr(instance, key, value)
 
         instance.user = user
-
-
-
+        instance.set_locale_names(self.context.pop('names', []))
         instance.save()
 
         return instance
