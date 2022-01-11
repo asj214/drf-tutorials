@@ -4,28 +4,28 @@
     content_type: 9
     content_id: 1
     code: ko
-    value: 아이유(IU)
+    value: 좋은날
 - model: examples.localename
   pk: 2
   fields:
     content_type: 9
     content_id: 1
     code: en
-    value: IU
+    value: Good Day
 - model: examples.localename
   pk: 3
   fields:
     content_type: 9
     content_id: 2
     code: ko
-    value: 소녀시대
+    value: '8282'
 - model: examples.localename
   pk: 4
   fields:
     content_type: 9
     content_id: 2
     code: en
-    value: Girls Generation(SNSD)
+    value: '8282'
 - model: examples.localename
   pk: 5
   fields:

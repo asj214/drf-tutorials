@@ -92,6 +92,13 @@ class Product(BaseModel, SoftDeleteModel):
         related_name='products'
     )
     price = models.IntegerField('가격', default=0)
+    perks = GenericRelation(
+        'examples.Perk',
+        default=None,
+        null=True,
+        object_id_field='content_id',
+        content_type_field='content_type'
+    )
 
     objects = ProductManager()
 
@@ -162,3 +169,36 @@ class LocaleName(models.Model):
 
     def __str__(self):
         return f'{self.id}'
+
+
+class Perk(BaseModel):
+    content_type = models.ForeignKey(
+        ContentType,
+        default=None,
+        null=True,
+        on_delete=models.SET_NULL,
+        db_constraint=False,
+    )
+    content_id = models.PositiveIntegerField(
+        default=None,
+        null=True,
+        blank=True,
+        db_column='content_id'
+    )
+
+    content_object = GenericForeignKey('content_type', 'content_id')
+    base_item_id = models.PositiveIntegerField()
+
+    class Meta:
+        db_table = 'perks'
+        ordering = ['id']
+        indexes = [
+            models.Index(fields=['content_type', 'content_id'], name='generic_perks')
+        ]
+
+    def __str__(self):
+        return f'{self.id}'
+
+    @property
+    def related(self):
+        return Product.objects.get(pk=self.base_item_id)
