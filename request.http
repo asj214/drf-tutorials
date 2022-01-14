@@ -163,3 +163,54 @@ Authorization: Bearer {{ token }}
     "artist": 3,
     "price": 15000
 }
+
+
+###
+GET {{ BASE_URL }}/api/bo/brands
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+POST {{ BASE_URL }}/api/bo/brands
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "name": "NIKE",
+    "is_active": true
+}
+
+###
+GET {{ BASE_URL }}/api/bo/brands/1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+GET {{ BASE_URL }}/api/bo/products
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+POST {{ BASE_URL }}/api/bo/products
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "type": "GENERAL",
+    "brand_id": 2,
+    "name": "일반상품 등록",
+    "content": "콘텐츠",
+    "price": 30000,
+    "is_sale_period": false,
+    "is_published": true
+}
+
+
+###
+PUT {{ BASE_URL }}/api/bo/products/2/approvals
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+

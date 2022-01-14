@@ -1,42 +1,33 @@
-'''
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets, generics
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticated
-from .models import Artist
-from .serializers import (
-    ArtistSerializer,
-)
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .models import Brand, Product, MongoProduct
+from .serializers import BrandSerializer, ProductSerializer
 
 
-class ArtistViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    serializer_class = ArtistSerializer
-    queryset = Artist.objects
+class BrandViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = BrandSerializer
+    queryset = Brand.objects.prefetch_related('user').all()
 
     def get_queryset(self):
-        qs = self.queryset
-        name = self.request.query_params.get('name')
-        if name:
-            qs = qs.search_name(name)
-
-        return qs.all()
+        return self.queryset
     
-    def get_object(self, pk):
+    def get_object(self, pk=None):
         try:
-            return self.get_queryset().get(pk=pk)
-        except Artist.DoesNotExist:
+            return self.queryset.get(pk=pk)
+        except Brand.DoesNotExist:
             raise NotFound('Not Found')
-
+    
     def list(self, request, *args, **kwargs):
         page = self.paginate_queryset(self.get_queryset())
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-    
-    def create(self, request, pk=None, *args, **kwargs):
+
+    def create(self, request, *args, **kwargs):
         context = {
             'user': request.user,
-            'names': request.data.pop('names', [])
         }
         serializer = self.serializer_class(
             data=request.data,
@@ -46,63 +37,56 @@ class ArtistViewSet(viewsets.ModelViewSet):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
     def retrieve(self, request, pk=None, *args, **kwargs):
-        artist = self.get_object(pk)
-        serializer = self.serializer_class(artist)
+        brand = self.get_object(pk)
+        serializer = self.serializer_class(brand)
 
         return Response(serializer.data)
-    
-    def update(self, request, pk=None, *args, **kwargs):
-        artist = self.get_object(pk)
-        context = {
-            'user': request.user,
-            'names': request.data.pop('names', [])
-        }
 
+    def update(self, request, pk=None, *args, **kwargs):
+        brand = self.get_object(pk)
         serializer = self.serializer_class(
-            artist,
+            brand,
             data=request.data,
-            context=context,
+            context={'user': request.user},
             partial=True
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
         return Response(serializer.data)
-    
+
     def destroy(self, request, pk=None, *args, **kwargs):
-        artist = self.get_object(pk)
-        artist.delete()
+        brand = self.get_object(pk)
+        brand.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class ProductViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+    queryset = Product.objects.prefetch_related('user', 'brand__user').all()
 
     def get_queryset(self):
         return self.queryset
-
-
-    def get_object(self, pk):
+    
+    def get_object(self, pk=None):
         try:
-            return self.get_queryset().get(pk=pk)
+            return self.queryset.get(pk=pk)
         except Product.DoesNotExist:
             raise NotFound('Not Found')
-
-
+    
     def list(self, request, *args, **kwargs):
         page = self.paginate_queryset(self.get_queryset())
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-
-    def create(self, request, pk=None, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         context = {
             'user': request.user,
-            'names': request.data.pop('names', [])
+            'brand_id': request.data.pop('brand_id', None)
         }
         serializer = self.serializer_class(
             data=request.data,
@@ -112,7 +96,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         product = self.get_object(pk)
@@ -120,17 +103,15 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
-
     def update(self, request, pk=None, *args, **kwargs):
-        context = {
-            'user': request.user,
-            'names': request.data.pop('names', [])
-        }
         product = self.get_object(pk)
         serializer = self.serializer_class(
             product,
             data=request.data,
-            context=context,
+            context={
+                'user': request.user,
+                'brand_id': request.data.pop('brand_id', None)
+            },
             partial=True
         )
         serializer.is_valid(raise_exception=True)
@@ -138,10 +119,31 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
-
     def destroy(self, request, pk=None, *args, **kwargs):
         product = self.get_object(pk)
         product.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-'''
+
+
+class ProductApprovalView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = ProductSerializer
+    queryset = Product.objects.prefetch_related('user', 'brand__user').all()
+
+    def get_object(self, pk=None):
+        try:
+            return self.queryset.get(pk=pk)
+        except Product.DoesNotExist:
+            raise NotFound('Not Found')
+    
+    def update(self, request, pk=None, *args, **kwargs):
+        product = self.get_object(pk)
+        product.approval()
+
+        serializer = self.serializer_class(product)
+
+        document = MongoProduct()
+        document.create(**serializer.data)
+        
+        return Response(serializer.data)
