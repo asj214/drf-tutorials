@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '8hcsw6e9$d$1^i03p^!)on+%vq%1&93y9rs20sd=u)ee9yeth8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -93,6 +93,14 @@ MONGO_DB = {
     'authSource': 'admin',
     'authMechanism': 'SCRAM-SHA-1'
 }
+
+RABBIT_MQ = {
+    'host': '127.0.0.1',
+    'port': 5672,
+    'username': 'sjahn',
+    'password': 'rewq1234'
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
