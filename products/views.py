@@ -2,7 +2,7 @@ from rest_framework import status, viewsets, generics
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .models import Brand, Product, MongoProduct
+from .models import Brand, Product
 from .serializers import BrandSerializer, ProductSerializer
 
 
@@ -143,7 +143,4 @@ class ProductApprovalView(generics.UpdateAPIView):
 
         serializer = self.serializer_class(product)
 
-        document = MongoProduct()
-        document.create(**serializer.data)
-        
         return Response(serializer.data)

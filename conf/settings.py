@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '8hcsw6e9$d$1^i03p^!)on+%vq%1&93y9rs20sd=u)ee9yeth8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -31,7 +31,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'posts',
+    'shops',
     'products',
+    'categories',
     'examples'
 ]
 

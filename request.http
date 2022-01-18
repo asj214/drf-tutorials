@@ -214,3 +214,60 @@ PUT {{ BASE_URL }}/api/bo/products/2/approvals
 Content-Type: application/json
 Authorization: Bearer {{ token }}
 
+
+
+###
+GET {{ BASE_URL }}/api/bo/categories
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+POST {{ BASE_URL }}/api/bo/categories
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "parent_id": null,
+    "name": "ROOT",
+    "depth": 1,
+    "order": 1,
+    "is_active": true
+}
+
+###
+POST {{ BASE_URL }}/api/bo/categories
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "parent_id": 1,
+    "name": "아우터",
+    "depth": 2,
+    "order": 1,
+    "is_active": true
+}
+
+###
+POST {{ BASE_URL }}/api/bo/categories
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+    "parent_id": 2,
+    "name": "코트",
+    "depth": 3,
+    "order": 2,
+    "is_active": true
+}
+
+###
+GET {{ BASE_URL }}/api/bo/categories/2
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+DELETE {{ BASE_URL }}/api/bo/categories/2
+Content-Type: application/json
+Authorization: Bearer {{ token }}

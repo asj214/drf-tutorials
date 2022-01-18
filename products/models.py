@@ -1,6 +1,9 @@
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from conf.models import BaseModel, SoftDeleteModel
 from conf.mongodb import MongoModel
+from shops.models import ShopName
 
 
 class Brand(BaseModel, SoftDeleteModel):
@@ -21,6 +24,31 @@ class Brand(BaseModel, SoftDeleteModel):
         indexes = [
             models.Index(fields=['is_active', 'deleted_at'])
         ]
+
+
+class ProductShopName(BaseModel):
+    product = models.ForeignKey(
+        'products.Product',
+        on_delete=models.DO_NOTHING,
+        db_constraint=False,
+        default=None,
+        null=True,
+        related_name='shops'
+    )
+    code = models.CharField(max_length=200)
+    value = models.CharField(max_length=200)
+    is_sale_period = models.BooleanField('판매기간 설정', default=False)
+    price = models.DecimalField('가격', max_digits=10, decimal_places=2)
+    started_at = models.DateTimeField('시작일', null=True, default=None)
+    finished_at = models.DateTimeField('종료일', null=True, default=None)
+
+    class Meta:
+        db_table = 'product_shop_names'
+        ordering = ['-id']
+        indexes = []
+    
+    def __str__(self):
+        return f'{self.id}'
 
 
 class Product(BaseModel, SoftDeleteModel):
@@ -56,9 +84,9 @@ class Product(BaseModel, SoftDeleteModel):
 
     name = models.CharField('상품명', max_length=200)
     content = models.TextField('상품상세')
-    price = models.DecimalField('가격', max_digits=10, decimal_places=2)
 
     is_sale_period = models.BooleanField('판매기간 설정', default=False)
+    price = models.DecimalField('가격', max_digits=10, decimal_places=2)
     started_at = models.DateTimeField('시작일', null=True, default=None)
     finished_at = models.DateTimeField('종료일', null=True, default=None)
 
@@ -95,3 +123,4 @@ class MongoProduct(MongoModel):
 
     def __str__(self):
         return self.name
+
