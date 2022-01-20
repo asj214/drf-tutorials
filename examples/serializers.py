@@ -1,6 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
-from .models import Artist, Product, LocaleName
+from .models import LocaleName
 from users.serializers import UserSerializer
 
 
@@ -15,6 +15,7 @@ class LocaleRelatedSerializer(serializers.ModelSerializer):
             'value',
         )
 
+'''
 class ArtistRelated(serializers.ModelSerializer):
     name = serializers.CharField(max_length=200)
     
@@ -97,3 +98,4 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+'''

@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from conf.models import BaseModel, SoftDeleteModel
 
-
+'''
 class ArtistManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().prefetch_related(
@@ -55,7 +55,6 @@ class Artist(BaseModel, SoftDeleteModel):
                 locale.save()
 
         return self
-
 
 class ProductManager(models.Manager):
     def get_queryset(self):
@@ -120,7 +119,7 @@ class Product(BaseModel, SoftDeleteModel):
                 locale.save()
 
         return self
-
+'''
 
 class LocaleNameManager(models.Manager):
     def get_queryset(self):
